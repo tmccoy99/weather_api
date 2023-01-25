@@ -6,9 +6,10 @@ class WeatherClient {
     return fetch(apiUrl).then((response) => response.json());
   }
 }
-const client = new WeatherClient();
 
-client.fetchWeatherData("Leeds").then((weatherData) => {
-  console.log(`Weather data for ${weatherData.name}:`);
-  console.log(weatherData);
-});
+class Weather {}
+
+module.exports = {
+  Weather: Weather,
+  WeatherClient: WeatherClient,
+};
