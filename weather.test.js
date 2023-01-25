@@ -68,3 +68,30 @@ it("displayWeather() logs formattted information from saved data", (done) => {
     done();
   });
 });
+
+it("After data is loaded, refreshes every 2 seconds", async (done) => {
+  mockClient.fetchWeatherData.mockResolvedValueOnce({
+    name: "London",
+    main: {
+      temp: 20,
+      feels_like: 22,
+      humidity: 55,
+    },
+    weather: [{ main: "Drizzle" }],
+  });
+  await weather.loadContinuous("London");
+  expect(weather.getWeatherData().main.temp).toBe(20);
+  mockClient.fetchWeatherData.mockResolvedValueOnce({
+    name: "London",
+    main: {
+      temp: 25,
+      feels_like: 22,
+      humidity: 55,
+    },
+    weather: [{ main: "Drizzle" }],
+  });
+  setTimeout(() => {}, 2500).then(() => {
+    expect(weather.getWeatherData().main.temp).toBe(25);
+    done();
+  });
+});

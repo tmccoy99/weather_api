@@ -9,12 +9,20 @@ class WeatherClient {
 
 class Weather {
   constructor(client, io = console) {
+    this.data;
     this.client = client;
     this.io = io;
   }
 
   async load(city) {
     this.data = await this.client.fetchWeatherData(city);
+  }
+
+  async loadContinuous(city) {
+    this.data = await this.client.fetchWeatherData(city);
+    setInterval(async () => {
+      this.data = await this.client.fetchWeatherData(city);
+    }, 2000);
   }
 
   getWeatherData() {
