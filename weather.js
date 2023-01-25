@@ -19,6 +19,13 @@ class Weather {
   getWeatherData() {
     return this.data;
   }
+
+  async compareWith(city) {
+    const otherData = await this.client.fetchWeatherData(city);
+    return this.data.main.temp > otherData.main.temp
+      ? this.data.name
+      : otherData.name;
+  }
 }
 
 module.exports = {
