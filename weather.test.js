@@ -1,3 +1,4 @@
+const { Weather } = require("./weather");
 const classes = require("./weather");
 
 let weather;
@@ -43,4 +44,27 @@ it("compareWith(city) returns the name of the city with the highest temperature 
       expect(result).toBe("Brighton");
       done();
     });
+});
+
+it("displayWeather() logs formattted information from saved data", (done) => {
+  io = { log: jest.fn() };
+  weather = new Weather(mockClient, io);
+  mockClient.fetchWeatherData.mockResolvedValueOnce({
+    name: "London",
+    main: {
+      temp: 20,
+      feels_like: 22,
+      humidity: 55,
+    },
+    weather: [{ main: "Drizzle" }],
+  });
+  weather.load("London").then(() => {
+    weather.displayWeather();
+    expect(io.log).toHaveBeenCalledWith("City:" + " ".repeat(10) + "London");
+    expect(io.log).toHaveBeenCalledWith("Weather:" + " ".repeat(7) + "Drizzle");
+    expect(io.log).toHaveBeenCalledWith("Temperature:" + " ".repeat(3) + "20");
+    expect(io.log).toHaveBeenCalledWith("Feels like:" + " ".repeat(4) + "22");
+    expect(io.log).toHaveBeenCalledWith("Humidity:" + " ".repeat(6) + "55%");
+    done();
+  });
 });

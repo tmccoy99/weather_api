@@ -8,8 +8,9 @@ class WeatherClient {
 }
 
 class Weather {
-  constructor(client) {
+  constructor(client, io = console) {
     this.client = client;
+    this.io = io;
   }
 
   async load(city) {
@@ -25,6 +26,22 @@ class Weather {
     return this.data.main.temp > otherData.main.temp
       ? this.data.name
       : otherData.name;
+  }
+
+  displayWeather() {
+    this.io.log(this.#formatForDisplay("City", this.data.name));
+    this.io.log(this.#formatForDisplay("Weather", this.data.weather[0].main));
+    this.io.log(this.#formatForDisplay("Temperature", this.data.main.temp));
+    this.io.log(
+      this.#formatForDisplay("Feels like", this.data.main.feels_like)
+    );
+    this.io.log(
+      this.#formatForDisplay("Humidity", `${this.data.main.humidity}%`)
+    );
+  }
+
+  #formatForDisplay(key_str, value) {
+    return `${key_str}:` + " ".repeat(14 - key_str.length) + `${value}`;
   }
 }
 
