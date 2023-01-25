@@ -7,7 +7,19 @@ class WeatherClient {
   }
 }
 
-class Weather {}
+class Weather {
+  constructor(client) {
+    this.client = client;
+  }
+
+  async load(city) {
+    this.data = await this.client.fetchWeatherData(city);
+  }
+
+  getWeatherData() {
+    return this.data;
+  }
+}
 
 module.exports = {
   Weather: Weather,
