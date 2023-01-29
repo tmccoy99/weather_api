@@ -1,4 +1,4 @@
-const apiKey = require("./apikey");
+const apiKey = require('./apikey');
 
 class WeatherClient {
   async fetchWeatherData(city) {
@@ -12,6 +12,7 @@ class Weather {
     this.data;
     this.client = client;
     this.io = io;
+    this.intervalId;
   }
 
   async load(city) {
@@ -20,9 +21,13 @@ class Weather {
 
   async loadContinuous(city) {
     this.data = await this.client.fetchWeatherData(city);
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       this.data = await this.client.fetchWeatherData(city);
     }, 2000);
+  }
+
+  stopInterval() {
+    clearInterval(this.intervalId);
   }
 
   getWeatherData() {
@@ -37,19 +42,19 @@ class Weather {
   }
 
   displayWeather() {
-    this.io.log(this.#formatForDisplay("City", this.data.name));
-    this.io.log(this.#formatForDisplay("Weather", this.data.weather[0].main));
-    this.io.log(this.#formatForDisplay("Temperature", this.data.main.temp));
+    this.io.log(this.#formatForDisplay('City', this.data.name));
+    this.io.log(this.#formatForDisplay('Weather', this.data.weather[0].main));
+    this.io.log(this.#formatForDisplay('Temperature', this.data.main.temp));
     this.io.log(
-      this.#formatForDisplay("Feels like", this.data.main.feels_like)
+      this.#formatForDisplay('Feels like', this.data.main.feels_like)
     );
     this.io.log(
-      this.#formatForDisplay("Humidity", `${this.data.main.humidity}%`)
+      this.#formatForDisplay('Humidity', `${this.data.main.humidity}%`)
     );
   }
 
   #formatForDisplay(key_str, value) {
-    return `${key_str}:` + " ".repeat(14 - key_str.length) + `${value}`;
+    return `${key_str}:` + ' '.repeat(14 - key_str.length) + `${value}`;
   }
 }
 
